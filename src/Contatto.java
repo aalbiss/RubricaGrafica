@@ -66,32 +66,27 @@ public class Contatto implements Serializable {
 		
 	}
 
-	public void inserimento() {
+	public void inserimento(String cognome, String nome, String tel) {
 		Scanner keyboard = new Scanner(System.in);
 		
-		String cognome;
-		String nome;
-		String tel;
-
-		do {
-			System.out.print("Cognome: ");
-			cognome = keyboard.nextLine();
-			
-		}while(cognome.length() <= 0);
+//		do {
+////			System.out.print("Cognome: ");
+////			cognome = keyboard.nextLine();
+//		}while(cognome.length() <= 0);
 		setCognome(cognome);
 
-		do {
-			System.out.print("Nome: ");
-			nome = keyboard.nextLine();
-			
-		}while(nome.length() <= 0);
+//		do {
+//			System.out.print("Nome: ");
+//			nome = keyboard.nextLine();
+//
+//		}while(nome.length() <= 0);
 		setNome(nome);
 
-		do {
-			System.out.print("Telefono: ");
-			tel = keyboard.nextLine();
-			
-		}while(tel.length() < 10);
+//		do {
+//			System.out.print("Telefono: ");
+//			tel = keyboard.nextLine();
+//
+//		}while(tel.length() < 10);
 		setTelefono(tel);
 		
 	}

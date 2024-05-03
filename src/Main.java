@@ -31,7 +31,7 @@ public class Main{
 			switch(scelta) {
 
 			case 1:
-				r.inserimento();
+//				r.inserimento();
 				cont++;
 				break;
 

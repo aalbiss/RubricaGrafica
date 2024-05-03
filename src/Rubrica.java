@@ -6,7 +6,7 @@ public class Rubrica {
 
 	ArrayList<Contatto> aL = new ArrayList<>();
 
-	public void inserimento() {
+	public void inserimento(String cognome, String nome, String tel) {
 		Contatto c = new Contatto();
 
 		boolean telefono_trovato = false;
@@ -14,7 +14,7 @@ public class Rubrica {
 		System.out.println();
 		System.out.println("Inserire contatto numero " + (aL.size() + 1) + ": ");
 		System.out.println();
-		c.inserimento();
+		c.inserimento(cognome, nome, tel);
 
 
 		// CONTROLLO CONTATTO GIA' ESISTENTE (controllo del numero di telefono):
