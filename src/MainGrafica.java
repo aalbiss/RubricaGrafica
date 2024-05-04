@@ -19,13 +19,27 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
     String nome;
     String cognome;
     String telefono;
-    ArrayList<JLabel> contatti;
+    ArrayList<Contatto> contatti;
     
     Font font = new Font("Arial", Font.PLAIN, 25);
     Font fontTitolo = new Font("Arial", Font.PLAIN, 32);
     
     public MainGrafica(){
         super("Rubrica telefonica");
+        
+        try {
+            //choose one
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedLookAndFeelException e) {
+            throw new RuntimeException(e);
+        }
         
         homePage();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,7 +49,6 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
     }
     
     public void homePage(){
-        
         setPreferredSize(new Dimension(400, 600));
         setLayout(null);
         
@@ -46,26 +59,15 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
         top.setFont(fontTitolo);
         add(top);
         
-        
         contatti = new ArrayList<>();
         center = new JPanel();
         panel = new JPanel();
         
-//        for (int i = 0; i < 400; i++) {
-//            JLabel l = new JLabel("Label" + i);
-//            l.setFont(font);
-//            contatti.add(l);
-//        }
-
-//        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//        for (JLabel l : contatti) {
-//            panel.add(l);
-//            panel.add(Box.createHorizontalStrut(6));
-//            panel.add(Box.createVerticalStrut(8));
-//        }
+        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         
         scrollPane = new JScrollPane(panel);
         scrollPane.setBounds(0,60,385,440);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         add(scrollPane);
         
         bottom = new JPanel();
@@ -97,6 +99,8 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
     public void mouseClicked(MouseEvent e) {
         if(e.getSource() == plus){
             
+            boolean telefono_trovato = false;
+            
             nome  = JOptionPane.showInputDialog(null, "Inserisci nome contatto", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
             cognome = JOptionPane.showInputDialog(null, "Inserisci cognome contatto", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
             telefono = JOptionPane.showInputDialog(null, "Inserisci telefono contatto", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
@@ -106,16 +110,25 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
             
             r.inserimento(nome, cognome, telefono);
             
-            //TODO try to use JTABLE instead of JLABEL
+            for(Contatto cc : contatti) {
+                if(cc.getTelefono().equalsIgnoreCase(telefono)) {
+                    telefono_trovato = true;
+                    break;
+                }
+            }
             
-            JLabel contatto = new JLabel(nome + " " + cognome + " " + telefono, SwingConstants.LEFT);
-//            contatti.add(contatto);
-            contatto.setFont(font);
-            panel.add(contatto);
-            panel.add(Box.createHorizontalStrut(6));
-            panel.add(Box.createVerticalStrut(8));
-            repaint();
-            revalidate();
+            if(!telefono_trovato) {
+                contatti.add(new Contatto(nome, cognome, telefono));
+                JLabel contatto = new JLabel(nome + " " + cognome + " " + telefono, SwingConstants.LEFT);
+                contatto.setFont(font);
+                panel.add(contatto);
+                panel.add(Box.createVerticalStrut(2));
+                repaint();
+                revalidate();
+            }else {
+                JOptionPane.showMessageDialog(null, "Contatto con questo numero già esistente, impossibile aggiungerlo", "Errore aggiunta", JOptionPane.ERROR_MESSAGE);
+            }
+            
         }
     }
     

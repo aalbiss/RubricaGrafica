@@ -18,22 +18,15 @@ public class Rubrica {
 
 
 		// CONTROLLO CONTATTO GIA' ESISTENTE (controllo del numero di telefono):
-
 		for(Contatto cc : aL) {
 			if(cc.getTelefono().equalsIgnoreCase(c.getTelefono())) {
 				telefono_trovato = true;
-
 				break;
-
 			}
 		}
 
 		if(!telefono_trovato) {
 			aL.add(c);
-
-		}else {
-			System.out.println("Errore: il contatto è già presente nella rubrica!");
-
 		}
 	}
 
