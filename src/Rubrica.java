@@ -51,7 +51,7 @@ public class Rubrica {
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 
 				for(Contatto c : aL) {
-					Contatto contatto = new Contatto(c.getCognome(), c.getNome(), c.getTelefono());
+					Contatto contatto = new Contatto(c.getNome(), c.getCognome(), c.getTelefono());
 					oos.writeObject(contatto);
 				}
 
@@ -157,10 +157,10 @@ public class Rubrica {
 
 					String nuovo_numero;
 
-					do {
-						System.out.print("Nuovo numero: ");
+//					do {
+//						System.out.print("Nuovo numero: ");
 						nuovo_numero = keyboard.nextLine();
-					}while(nuovo_numero.length() < 10);
+//					}while(nuovo_numero.length() < 10);
 					c.setTelefono(nuovo_numero);
 
 					break;
@@ -175,38 +175,13 @@ public class Rubrica {
 		}
 	}
 
-	public void elimina() {
+	public void elimina(int index) {
 		if(aL.size() > 0) {
-
-			Scanner keyboard = new Scanner(System.in);
-
-			String cognome;
-			String nome;
-
-			boolean trovato = false;
-
-			do {
-				System.out.print("Cognome: ");
-				cognome = keyboard.nextLine();
-
-			}while(cognome.length() <= 0);
-
-			do {
-				System.out.print("Nome: ");
-				nome = keyboard.nextLine();
-
-			}while(nome.length() <= 0);
-
-			for(Contatto c : aL) {
-				int i = 0;
-				i ++;
-
-				if(c.getCognome().equalsIgnoreCase(cognome) && c.getNome().equalsIgnoreCase(nome)) {
-					aL.remove(i);
-					break;
-
-				}
-			}
+			aL.remove(index);
 		}
+	}
+	
+	public ArrayList<Contatto> getContatti(){
+		return aL;
 	}
 }

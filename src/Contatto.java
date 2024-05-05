@@ -52,13 +52,14 @@ public class Contatto implements Serializable {
 	}
 	
 	public void setTelefono(String tel) {
-		if(tel.length() == 10) {
-			this.tel = tel;
-			
-		}else {
-			this.tel = "";
-			
-		}
+//		if(tel.length() == 10) {
+//			this.tel = tel;
+//
+//		}else {
+//			this.tel = "";
+//
+//		}
+		this.tel = tel;
 	}
 	
 	public String getTelefono() {
@@ -66,8 +67,8 @@ public class Contatto implements Serializable {
 	}
 
 	public void inserimento(String cognome, String nome, String tel) {
-		setCognome(cognome);
 		setNome(nome);
+		setCognome(cognome);
 		setTelefono(tel);
 	}
 
