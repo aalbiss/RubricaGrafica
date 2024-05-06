@@ -122,18 +122,21 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
             boolean telefono_trovato = false;
             
             nome  = JOptionPane.showInputDialog(null, "Inserisci nome contatto", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
-            cognome = JOptionPane.showInputDialog(null, "Inserisci cognome contatto", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
-            while (nome.isEmpty() && cognome.isEmpty()){
-                nome  = JOptionPane.showInputDialog(null, "Inserisci almeno un nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
-                
-            }
+            while (nome.isEmpty())
+                nome  = JOptionPane.showInputDialog(null, "Inserisci il nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+            
+            cognome  = JOptionPane.showInputDialog(null, "Inserisci cognome contatto", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+            while (cognome.isEmpty())
+                cognome = JOptionPane.showInputDialog(null, "Inserisci il nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+            
             telefono = JOptionPane.showInputDialog(null, "Inserisci telefono contatto", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+            while(telefono.isEmpty())
+                telefono = JOptionPane.showInputDialog(null, "Inserisci  contatto", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+            
             if(nome != null && cognome != null && telefono != null){
-                
 //                while(telefono.length() != 10){
 //                    telefono = JOptionPane.showInputDialog(null, "Numero di telefono errato", "Errore numero di telefono", JOptionPane.ERROR_MESSAGE);
 //                }
-                
                 for(Contatto cc : contatti) {
                     if(cc.getTelefono().equalsIgnoreCase(telefono) || (cc.getNome().equalsIgnoreCase(nome) || (cc.getNome().equalsIgnoreCase(nome) && cc.getCognome().equalsIgnoreCase(cognome)) )) {
                         telefono_trovato = true;
@@ -157,34 +160,42 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
             }
             
         }
+        
         else if(e.getSource() == modify){
+            int index = -1;
+
             nome  = JOptionPane.showInputDialog(null, "Inserisci nome contatto da modificare", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+            while (nome.isEmpty())
+                nome  = JOptionPane.showInputDialog(null, "Inserisci il nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+            
             cognome = JOptionPane.showInputDialog(null, "Inserisci cognome contatto da modificare", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+            while (cognome.isEmpty())
+                cognome = JOptionPane.showInputDialog(null, "Inserisci il nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+            
             if(nome != null && cognome != null){
                 for(Contatto cc : contatti) {
                     if(cc.getTelefono().equalsIgnoreCase(telefono) || (cc.getNome().equalsIgnoreCase(nome) && cc.getCognome().equalsIgnoreCase(cognome))) {
-                        
+                        index = contatti.indexOf(cc);
                         break;
                     }
                 }
+                if(index != -1) {
+                    nome  = JOptionPane.showInputDialog(null, "Inserisci nuovo nome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                    while (nome.isEmpty())
+                        nome  = JOptionPane.showInputDialog(null, "Obbligatorio inserire nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                    
+                    cognome = JOptionPane.showInputDialog(null, "Inserisci nuovo cognome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                    while (cognome.isEmpty())
+                        cognome = JOptionPane.showInputDialog(null, "Inserisci il nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                    repaint();
+                    revalidate();
+                }else {
+                    JOptionPane.showMessageDialog(null, "Contatto già esistente, impossibile aggiungerlo", "Errore aggiunta", JOptionPane.ERROR_MESSAGE);
+                }
                 
-//                if(!telefono_trovato) {
-//                    contatti.add(new Contatto(nome, cognome, telefono));
-//                    JPanel paneContatto = getPanelContact();
-//                    panel.add(paneContatto);
-//                    panel.add(Box.createVerticalStrut(7));
-//                    repaint();
-//                    revalidate();
-//                }else {
-//                    JOptionPane.showMessageDialog(null, "Contatto già esistente, impossibile aggiungerlo", "Errore aggiunta", JOptionPane.ERROR_MESSAGE);
-//                }
-                
-                r.inserimento(nome, cognome, telefono);
             }
         }
-        else if (e.getSource() == search) {
-        
-        }
+        else if (e.getSource() == search) {}
         else if(e.getSource() == delete){
             int index = -1;
             nome = JOptionPane.showInputDialog(null, "Inserisci nome contatto da eliminare", "Eliminazione contatto", JOptionPane.QUESTION_MESSAGE);
@@ -196,9 +207,10 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
                         break;
                     }
                 }
-
+                
                 if(index != -1) {
                     contatti.remove(index);
+                    panel.remove(index*2);
                     panel.remove(index*2);
                     r.salvataggio();
                     repaint();
@@ -215,22 +227,12 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
     }
     
     private JPanel getPanelContact() {
-        JLabel labelNomeContatto = null;
-        JLabel labelTelefonoContatto = null;
-        if (cognome.isEmpty())
-            labelNomeContatto = new JLabel(nome, SwingConstants.LEFT);
-        
-        if (!nome.isEmpty() && !cognome.isEmpty())
-            labelNomeContatto = new JLabel(nome + " " + cognome, SwingConstants.LEFT);
-        
-        if(!telefono.isEmpty())
-            labelTelefonoContatto = new JLabel(telefono,SwingConstants.LEFT);
-        
+        JLabel labelNomeContatto = new JLabel(nome + " " + cognome, SwingConstants.LEFT);;
+        JLabel labelTelefonoContatto = new JLabel(telefono,SwingConstants.LEFT);
         JPanel paneContatto = new JPanel();
+        
         paneContatto.setLayout(new BoxLayout(paneContatto, BoxLayout.PAGE_AXIS));
-        if (labelNomeContatto != null) {
-            labelNomeContatto.setFont(fontNome);
-        }
+        labelNomeContatto.setFont(fontNome);
         labelTelefonoContatto.setFont(fontTelefono);
         paneContatto.add(labelNomeContatto);
         paneContatto.add(labelTelefonoContatto);
@@ -262,9 +264,6 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
         for (Contatto c : contatti) {
             JLabel labelNomeContatto = new JLabel(c.getNome() + " " + c.getCognome(), SwingConstants.LEFT);
             JLabel labelTelefonoContatto = new JLabel(c.getTelefono(),SwingConstants.LEFT);
-            labelTelefonoContatto.setBorder(new LineBorder(Color.BLACK));
-//            labelTelefonoContatto.setBackground(Color.yellow);
-//            labelTelefonoContatto.setOpaque(true);
             JPanel paneContatto = new JPanel();
             paneContatto.setLayout(new BoxLayout(paneContatto, BoxLayout.PAGE_AXIS));
             labelNomeContatto.setFont(fontNome);

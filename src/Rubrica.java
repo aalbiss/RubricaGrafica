@@ -43,7 +43,6 @@ public class Rubrica {
 	}
 
 	public void salvataggio() {
-		if(aL.size() > 0) {
 			File file = new File("rubrica.dat");
 
 			try {
@@ -61,7 +60,6 @@ public class Rubrica {
 			}catch(Exception e) {
 				System.out.println("Eccezione " + e);
 			}
-		}
 	}
 
 	public void importa() {
