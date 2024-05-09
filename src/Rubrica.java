@@ -12,9 +12,6 @@ public class Rubrica {
         
         boolean telefono_trovato = false;
         
-        System.out.println();
-        System.out.println("Inserire contatto numero " + (aL.size() + 1) + ": ");
-        System.out.println();
         c.inserimento(nome, cognome, tel);
         
         
@@ -79,11 +76,14 @@ public class Rubrica {
     
     public ArrayList<Contatto> ricerca(String nome, String cognome) {
         ArrayList<Contatto> contattiTrovati = new ArrayList<>();
-        String nomeDaRicercare = nome + " " + cognome;
+        nome = nome.toLowerCase();
+        cognome = cognome.toLowerCase();
+        
         
         for (Contatto c : aL) {
-            String n = c.getNome() + " " + c.getCognome() + " ";
-            if (n.contains(nomeDaRicercare)) {
+            String n = c.getNome().toLowerCase();
+            String cog = c.getCognome().toLowerCase();
+            if (n.startsWith(nome) && cog.startsWith(cognome)) {
                 contattiTrovati.add(c);
             }
         }

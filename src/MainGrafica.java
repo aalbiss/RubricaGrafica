@@ -1,17 +1,20 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
-public class MainGrafica extends JFrame implements ActionListener, MouseListener {
+public class MainGrafica extends JFrame implements MouseListener {
     
-    //TODO when I modify a contact I also have to check if that name, surname, telephone number already exist
-    //TODO a bug appears when I click the search button a few times and than I cannot click in the home page button
-    //TODO rename title JLabel after the exit of the search part
     //TODO remove trail white spaces on name and surname
+    
+    boolean visualizzato;
     
     Rubrica r = new Rubrica();
     JScrollPane scrollPane;
@@ -33,12 +36,14 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
     ArrayList<Contatto> contattiRicerca;
     ArrayList<JPanel> pannelliContatti;
     
-    Font fontNome = new Font("Rage", Font.PLAIN, 25);
+    Font fontNome = new Font("Arial", Font.PLAIN, 25);
     Font fontTelefono = new Font("Arial", Font.PLAIN, 17);
     Font fontTitolo = new Font("Arial", Font.PLAIN, 32);
     
     public MainGrafica() {
-        super("Rubrica telefonica");
+        super("Rubrica Telefonica");
+        
+        visualizzato = false;
         
         try {
             //choose one
@@ -71,7 +76,7 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
         contatti = new ArrayList<>();
         pannelliContatti = new ArrayList<>();
         
-        top = new JLabel("Rubrica telefonica", SwingConstants.CENTER);
+        top = new JLabel("Rubrica Telefonica", SwingConstants.CENTER);
         
         bottom = new JPanel();
         
@@ -81,7 +86,7 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
         search = new JLabel(new ImageIcon("images/search.png"));
         home = new JLabel(new ImageIcon("images/home.png"));
         
-        top.setBounds(0, 0, 400, 60);
+        top.setBounds(0, 0, 390, 60);
         top.setFont(fontTitolo);
         add(top);
         
@@ -120,10 +125,12 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
         scrollPane = new JScrollPane(panel);
         r.importa();
         contatti = r.getContatti();
+        riordina();
         getSalvati();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         scrollPane.setBounds(0, 60, 385, 440);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(4);
         add(scrollPane);
     }
     
@@ -140,14 +147,10 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
         panelCerca.setLayout(new BoxLayout(panelCerca, BoxLayout.PAGE_AXIS));
         scrollPaneCerca.setBounds(0, 60, 385, 440);
         scrollPaneCerca.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        
         add(scrollPaneCerca);
+        visualizzato = true;
+        repaint();
         revalidate();
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent e) {
-    
     }
     
     @Override
@@ -197,7 +200,16 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
                 r.inserimento(nome, cognome, telefono);
             }
             r.salvataggio();
-        } else if (e.getSource() == modify) {
+        }
+        else if (e.getSource() == modify) {
+            if(visualizzato){
+                top.setText("Rubrica Telefonica");
+                remove(scrollPaneCerca);
+                scrollPane.setBounds(0, 60, 385, 440);
+                scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                add(scrollPane);
+            }
+            
             int index = -1;
             String nomeDaRicercare;
             String cognomeDaRicercare;
@@ -218,21 +230,48 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
                     }
                 }
                 if (index != -1) {
-                    nome = JOptionPane.showInputDialog(null, "Inserisci nuovo nome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
-                    while (nome.isEmpty())
-                        nome = JOptionPane.showInputDialog(null, "Obbligatorio inserire nuovo nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
                     
-                    cognome = JOptionPane.showInputDialog(null, "Inserisci nuovo cognome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
-                    while (cognome.isEmpty())
-                        cognome = JOptionPane.showInputDialog(null, "Obbligatorio inserire nuovo cognome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                    int ripetuto = 0;
                     
-                    telefono = JOptionPane.showInputDialog(null, "Inserisci il nuovo numero di telefono", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
-                    if (!telefono.isEmpty()) {
-                        while (telefono.length() != 10 || !isNumeric(telefono)) {
-                            telefono = JOptionPane.showInputDialog(null, "Errore numero di telefono", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                    do{
+                        if(ripetuto > 0 ) {
+                            JOptionPane.showConfirmDialog(null, "Contatto già esistente", "Contatto già esistente", JOptionPane.WARNING_MESSAGE);
+                            
+                            nome = JOptionPane.showInputDialog(null, "Inserisci nuovo nome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                            while (nome.isEmpty())
+                                nome = JOptionPane.showInputDialog(null, "Obbligatorio inserire nuovo nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                            
+                            cognome = JOptionPane.showInputDialog(null, "Inserisci nuovo cognome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                            while (cognome.isEmpty())
+                                cognome = JOptionPane.showInputDialog(null, "Obbligatorio inserire nuovo cognome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                            
+                            
+                            telefono = JOptionPane.showInputDialog(null, "Inserisci il nuovo numero di telefono", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                            if (!telefono.isEmpty()) {
+                                while (telefono.length() != 10 || !isNumeric(telefono)) {
+                                    telefono = JOptionPane.showInputDialog(null, "Errore numero di telefono", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                        } else if (ripetuto == 0) {
+                            nome = JOptionPane.showInputDialog(null, "Inserisci nuovo nome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                            while (nome.isEmpty())
+                                nome = JOptionPane.showInputDialog(null, "Obbligatorio inserire nuovo nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                            
+                            cognome = JOptionPane.showInputDialog(null, "Inserisci nuovo cognome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                            while (cognome.isEmpty())
+                                cognome = JOptionPane.showInputDialog(null, "Obbligatorio inserire nuovo cognome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                            
+                            
+                            telefono = JOptionPane.showInputDialog(null, "Inserisci il nuovo numero di telefono", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                            if (!telefono.isEmpty()) {
+                                while (telefono.length() != 10 || !isNumeric(telefono)) {
+                                    telefono = JOptionPane.showInputDialog(null, "Errore numero di telefono", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
                         }
-                    }
-                    
+                        
+                        ripetuto++;
+                    }while(exists());
                     
                     JPanel paneContatto = pannelliContatti.get(index);
                     Component cNome = paneContatto.getComponent(0);
@@ -254,11 +293,24 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
                 }
                 
             }
-        } else if (e.getSource() == search) {
+        }
+        else if (e.getSource() == search) {
+            if(visualizzato){
+                remove(scrollPaneCerca);
+            }
             top.setText("Ricerca Contatto");
             scrollPaneCerca();
-        } else if (e.getSource() == delete) {
-            int index = -1;
+        }
+        else if (e.getSource() == delete) {
+            if(visualizzato) {
+                top.setText("Rubrica Telefonica");
+                remove(scrollPaneCerca);
+                scrollPane.setBounds(0, 60, 385, 440);
+                scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                add(scrollPane);
+            }
+                
+                int index = -1;
             nome = JOptionPane.showInputDialog(null, "Inserisci nome contatto da eliminare", "Eliminazione contatto", JOptionPane.QUESTION_MESSAGE);
             cognome = JOptionPane.showInputDialog(null, "Inserisci cognome contatto da eliminare", "Eliminazione contatto", JOptionPane.QUESTION_MESSAGE);
             if (nome != null && cognome != null) {
@@ -281,11 +333,13 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
                 }
                 
             }
-        } else if (e.getSource() == home) {
-            remove(scrollPaneCerca);
+        }
+        else if (e.getSource() == home) {
+//            remove(scrollPaneCerca);
+            add(scrollPane);
+            top.setText("Rubrica Telefonica");
             scrollPane.setBounds(0, 60, 385, 440);
             scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            add(scrollPane);
         }
     }
     
@@ -364,7 +418,6 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
             panelCerca.add(paneContatto);
             panelCerca.add(Box.createVerticalStrut(7));
         }
-        
     }
     
     public boolean isNumeric(String str) {
@@ -378,4 +431,23 @@ public class MainGrafica extends JFrame implements ActionListener, MouseListener
         }
         return true;
     }
+    
+    public boolean exists(){
+        boolean telefono_trovato = false;
+        for (Contatto cc : contatti) {
+            if (cc.getTelefono().equalsIgnoreCase(telefono) || ((cc.getNome().equalsIgnoreCase(nome) && cc.getCognome().equalsIgnoreCase(cognome)))) {
+                telefono_trovato = true;
+                break;
+            }
+        }
+        return  telefono_trovato;
+    }
+    
+    public void riordina(){
+        Collections.sort(contatti, Comparator.comparing(Contatto::getNome).thenComparing(Contatto::getCognome));
+        for (Contatto c : contatti) {
+            System.out.println(c.getNome() + " " + c.getCognome());
+        }
+    }
+    
 }
