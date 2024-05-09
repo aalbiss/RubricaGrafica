@@ -125,7 +125,7 @@ public class MainGrafica extends JFrame implements MouseListener {
         scrollPane = new JScrollPane(panel);
         r.importa();
         contatti = r.getContatti();
-        riordina();
+//        riordina();
         getSalvati();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         scrollPane.setBounds(0, 60, 385, 440);
@@ -185,7 +185,7 @@ public class MainGrafica extends JFrame implements MouseListener {
                 }
                 // cc.getNome().equalsIgnoreCase(nome) ||
                 if (!telefono_trovato) {
-                    contatti.add(new Contatto(nome, cognome, telefono));
+//                    getSalvati();
                     r.salvataggio();
                     JPanel paneContatto = getPanelContact();
                     panel.add(paneContatto);
@@ -198,6 +198,7 @@ public class MainGrafica extends JFrame implements MouseListener {
                 }
                 
                 r.inserimento(nome, cognome, telefono);
+//                riordina();
             }
             r.salvataggio();
         }
@@ -396,6 +397,7 @@ public class MainGrafica extends JFrame implements MouseListener {
     }
     
     private void getRicerca() {
+        
         if (!contattiRicerca.isEmpty()) {
             for (Contatto c : contattiRicerca) {
                 JLabel labelNomeContatto = new JLabel(c.getNome() + " " + c.getCognome(), SwingConstants.LEFT);
@@ -445,9 +447,9 @@ public class MainGrafica extends JFrame implements MouseListener {
     
     public void riordina(){
         Collections.sort(contatti, Comparator.comparing(Contatto::getNome).thenComparing(Contatto::getCognome));
-        for (Contatto c : contatti) {
-            System.out.println(c.getNome() + " " + c.getCognome());
-        }
+//        for (Contatto c : contatti) {
+//            System.out.println(c.getNome() + " " + c.getCognome());
+//        }
     }
     
 }
