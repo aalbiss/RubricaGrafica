@@ -1,14 +1,8 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class MainGrafica extends JFrame implements MouseListener {
     
@@ -140,8 +134,10 @@ public class MainGrafica extends JFrame implements MouseListener {
         contattiRicerca = new ArrayList<>();
         remove(scrollPane);
         revalidate();
-        nome = JOptionPane.showInputDialog(null, "Inserisci nome contatto", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
-        cognome = JOptionPane.showInputDialog(null, "Inserisci cognome contatto", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+        nome = JOptionPane.showInputDialog(null, "Inserisci nome contatto", "Ricerca contatto", JOptionPane.QUESTION_MESSAGE);
+        cognome = JOptionPane.showInputDialog(null, "Inserisci cognome contatto", "Ricerca contatto", JOptionPane.QUESTION_MESSAGE);
+        nome = nome.trim();
+        cognome = cognome.trim();
         contattiRicerca = r.ricerca(nome, cognome);
         getRicerca();
         panelCerca.setLayout(new BoxLayout(panelCerca, BoxLayout.PAGE_AXIS));
@@ -156,6 +152,15 @@ public class MainGrafica extends JFrame implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == plus) {
+            if(visualizzato){
+                top.setText("Rubrica Telefonica");
+                remove(scrollPaneCerca);
+                revalidate();
+                visualizzato = false;
+                scrollPane.setBounds(0, 60, 385, 440);
+                scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                add(scrollPane);
+            }
             
             boolean telefono_trovato = false;
             
@@ -183,6 +188,10 @@ public class MainGrafica extends JFrame implements MouseListener {
                         break;
                     }
                 }
+                
+                nome = nome.trim();
+                cognome = cognome.trim();
+                telefono = telefono.trim();
                 // cc.getNome().equalsIgnoreCase(nome) ||
                 if (!telefono_trovato) {
 //                    getSalvati();
@@ -206,6 +215,8 @@ public class MainGrafica extends JFrame implements MouseListener {
             if(visualizzato){
                 top.setText("Rubrica Telefonica");
                 remove(scrollPaneCerca);
+                revalidate();
+                visualizzato = false;
                 scrollPane.setBounds(0, 60, 385, 440);
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
                 add(scrollPane);
@@ -236,7 +247,7 @@ public class MainGrafica extends JFrame implements MouseListener {
                     
                     do{
                         if(ripetuto > 0 ) {
-                            JOptionPane.showConfirmDialog(null, "Contatto già esistente", "Contatto già esistente", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Contatto già esistente", "Contatto già esistente", JOptionPane.WARNING_MESSAGE);
                             
                             nome = JOptionPane.showInputDialog(null, "Inserisci nuovo nome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
                             while (nome.isEmpty())
@@ -274,6 +285,10 @@ public class MainGrafica extends JFrame implements MouseListener {
                         ripetuto++;
                     }while(exists());
                     
+                    nome = nome.trim();
+                    cognome = cognome.trim();
+                    telefono = telefono.trim();
+                    
                     JPanel paneContatto = pannelliContatti.get(index);
                     Component cNome = paneContatto.getComponent(0);
                     Component cTelefono = paneContatto.getComponent(1);
@@ -306,14 +321,17 @@ public class MainGrafica extends JFrame implements MouseListener {
             if(visualizzato) {
                 top.setText("Rubrica Telefonica");
                 remove(scrollPaneCerca);
+                visualizzato = false;
                 scrollPane.setBounds(0, 60, 385, 440);
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
                 add(scrollPane);
             }
-                
-                int index = -1;
+            
+            int index = -1;
             nome = JOptionPane.showInputDialog(null, "Inserisci nome contatto da eliminare", "Eliminazione contatto", JOptionPane.QUESTION_MESSAGE);
             cognome = JOptionPane.showInputDialog(null, "Inserisci cognome contatto da eliminare", "Eliminazione contatto", JOptionPane.QUESTION_MESSAGE);
+            nome = nome.trim();
+            cognome = cognome.trim();
             if (nome != null && cognome != null) {
                 for (Contatto cc : contatti) {
                     if (cc.getNome().equalsIgnoreCase(nome) && cc.getCognome().equalsIgnoreCase(cognome)) {
@@ -336,7 +354,7 @@ public class MainGrafica extends JFrame implements MouseListener {
             }
         }
         else if (e.getSource() == home) {
-//            remove(scrollPaneCerca);
+            remove(scrollPaneCerca);
             add(scrollPane);
             top.setText("Rubrica Telefonica");
             scrollPane.setBounds(0, 60, 385, 440);
@@ -445,11 +463,11 @@ public class MainGrafica extends JFrame implements MouseListener {
         return  telefono_trovato;
     }
     
-    public void riordina(){
-        Collections.sort(contatti, Comparator.comparing(Contatto::getNome).thenComparing(Contatto::getCognome));
+//    public void riordina(){
+//        Collections.sort(contatti, Comparator.comparing(Contatto::getNome).thenComparing(Contatto::getCognome));
 //        for (Contatto c : contatti) {
 //            System.out.println(c.getNome() + " " + c.getCognome());
 //        }
-    }
+//    }
     
 }
