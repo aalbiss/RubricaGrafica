@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MainGrafica extends JFrame implements MouseListener {
     
@@ -226,13 +228,13 @@ public class MainGrafica extends JFrame implements MouseListener {
             String nomeDaRicercare;
             String cognomeDaRicercare;
             
-            nomeDaRicercare = JOptionPane.showInputDialog(null, "Inserisci nome contatto da modificare", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+            nomeDaRicercare = JOptionPane.showInputDialog(null, "Inserisci nome contatto da modificare", "Modifica contatto", JOptionPane.QUESTION_MESSAGE);
             while (nomeDaRicercare.isEmpty())
-                nomeDaRicercare = JOptionPane.showInputDialog(null, "Inserisci nome contatto da modificare", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                nomeDaRicercare = JOptionPane.showInputDialog(null, "Inserisci nome contatto da modificare", "Modifica contatto", JOptionPane.ERROR_MESSAGE);
             
-            cognomeDaRicercare = JOptionPane.showInputDialog(null, "Inserisci cognome contatto da modificare", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+            cognomeDaRicercare = JOptionPane.showInputDialog(null, "Inserisci cognome contatto da modificare", "Modifica contatto", JOptionPane.QUESTION_MESSAGE);
             while (cognomeDaRicercare.isEmpty())
-                cognomeDaRicercare = JOptionPane.showInputDialog(null, "Inserisci cognome contatto da modificare", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                cognomeDaRicercare = JOptionPane.showInputDialog(null, "Inserisci cognome contatto da modificare", "Modifica contatto", JOptionPane.ERROR_MESSAGE);
             
             if (nomeDaRicercare != null && cognomeDaRicercare != null) {
                 for (Contatto cc : contatti) {
@@ -249,16 +251,16 @@ public class MainGrafica extends JFrame implements MouseListener {
                         if(ripetuto > 0 ) {
                             JOptionPane.showMessageDialog(null, "Contatto già esistente", "Contatto già esistente", JOptionPane.WARNING_MESSAGE);
                             
-                            nome = JOptionPane.showInputDialog(null, "Inserisci nuovo nome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                            nome = JOptionPane.showInputDialog(null, "Inserisci nuovo nome", "Modifica contatto", JOptionPane.QUESTION_MESSAGE);
                             while (nome.isEmpty())
-                                nome = JOptionPane.showInputDialog(null, "Obbligatorio inserire nuovo nome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                                nome = JOptionPane.showInputDialog(null, "Obbligatorio inserire nuovo nome", "Modifica contatto", JOptionPane.ERROR_MESSAGE);
                             
-                            cognome = JOptionPane.showInputDialog(null, "Inserisci nuovo cognome", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                            cognome = JOptionPane.showInputDialog(null, "Inserisci nuovo cognome", "Modifica contatto", JOptionPane.QUESTION_MESSAGE);
                             while (cognome.isEmpty())
-                                cognome = JOptionPane.showInputDialog(null, "Obbligatorio inserire nuovo cognome", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
+                                cognome = JOptionPane.showInputDialog(null, "Obbligatorio inserire nuovo cognome", "Modifica contatto", JOptionPane.ERROR_MESSAGE);
                             
                             
-                            telefono = JOptionPane.showInputDialog(null, "Inserisci il nuovo numero di telefono", "Aggiunta contatto", JOptionPane.QUESTION_MESSAGE);
+                            telefono = JOptionPane.showInputDialog(null, "Inserisci il nuovo numero di telefono", "Modifica contatto", JOptionPane.QUESTION_MESSAGE);
                             if (!telefono.isEmpty()) {
                                 while (telefono.length() != 10 || !isNumeric(telefono)) {
                                     telefono = JOptionPane.showInputDialog(null, "Errore numero di telefono", "Aggiunta contatto", JOptionPane.ERROR_MESSAGE);
